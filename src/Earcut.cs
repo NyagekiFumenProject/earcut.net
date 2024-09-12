@@ -7,15 +7,20 @@ namespace EarcutNet
     {
         public static List<int> Tessellate(IList<double> data, IList<int> holeIndices)
         {
+            var triangles = new List<int>();
+            Tessellate(data, holeIndices, triangles);
+            return triangles;
+        }
+
+        public static void Tessellate(IList<double> data, IList<int> holeIndices, List<int> result)
+        {
             var hasHoles = holeIndices.Count > 0;
             var outerLen = hasHoles ? holeIndices[0] * 2 : data.Count;
             var outerNode = LinkedList(data, 0, outerLen, true);
-            var triangles = new List<int>();
+            var triangles = result;
 
             if (outerNode == null)
-            {
-                return triangles;
-            }
+                return;
 
             var minX = double.PositiveInfinity;
             var minY = double.PositiveInfinity;
@@ -24,9 +29,7 @@ namespace EarcutNet
             var invSize = default(double);
 
             if (hasHoles)
-            {
                 outerNode = EliminateHoles(data, holeIndices, outerNode);
-            }
 
             // if the shape is not too simple, we'll use z-order curve hash later; calculate polygon bbox
             if (data.Count > 80 * 2)
@@ -63,8 +66,6 @@ namespace EarcutNet
             }
 
             EarcutLinked(outerNode, triangles, minX, minY, invSize, 0);
-
-            return triangles;
         }
 
         // Creates a circular doubly linked list from polygon points in the specified winding order.
