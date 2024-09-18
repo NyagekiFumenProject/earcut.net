@@ -636,7 +636,7 @@ namespace EarcutNet
         // check if a point lies within a convex triangle
         static bool PointInTriangle(double ax, double ay, double bx, double by, double cx, double cy, double px, double py)
         {
-            return (cx - px) * (ay - py) - (ax - px) * (cy - py) >= 0 &&
+            return (cx - px) * (ay - py) - (ax - px) * (cy - py) > 0 &&
                    (ax - px) * (by - py) - (bx - px) * (ay - py) >= 0 &&
                    (bx - px) * (cy - py) - (cx - px) * (by - py) >= 0;
         }
@@ -819,6 +819,11 @@ namespace EarcutNet
 
                 // indicates whether this is a steiner point
                 this.steiner = false;
+            }
+
+            public override string ToString()
+            {
+                return $"i:{i} ({x}, {y}, {z}) steiner:{steiner}";
             }
         }
 
